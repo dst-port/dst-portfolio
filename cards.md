@@ -1,2 +1,3 @@
 https://dstport.medium.com/amadey-lab-cyberdefenders-c8cea2150ef2:Amadey bot malware analysis lab walkthrough on CyberDefenders. Memory forensics, traffic analysis, and tracking C2 infrastructure.:Amadey Lab CyberDefenders
 https://github.com/root-froxward/security-stack:Overview of security tools, stack configurations, and defensive architecture setups for environment monitoring.:Security Stack Setup
+https://github.com/dst-port/wazuh-rules:Custom detection rules, decoders, and security monitoring configurations for Wazuh SIEM.:Wazuh Rules Setup
