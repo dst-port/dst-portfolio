@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dst // portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050505;
+            color: #fff;
+            font-family: 'Comfortaa', sans-serif;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            padding: 40px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Profile Panel */
+        .profile-box {
+            width: 280px;
+            background: rgba(10, 10, 10, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            height: fit-content;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+        }
+        
+        .pfp-box {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+            overflow: hidden;
+            background: #111;
+        }
+
+        .pfp-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-box h1 { color: #fff; margin: 0 0 5px 0; font-size: 1.8rem; }
+        .profile-box .handle { color: #888; margin-bottom: 20px; display: block; font-size: 0.85rem; }
+        .profile-box .quote { color: #aaa; font-style: italic; font-size: 0.9rem; }
+        .profile-box p { font-size: 0.9rem; color: #ccc; }
+
+        #card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            perspective: 1400px; 
+            transform-style: preserve-3d;
+        }
+
+        /* --- CARDS STYLE --- */
+        .card {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 240px;
+            height: 340px;
+            border-radius: 20px;
+            
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.12) 0%, 
+                rgba(40, 40, 40, 0.2) 50%, 
+                rgba(0, 0, 0, 0.7) 100%
+            );
+            
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff; 
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            
+            transform-origin: center center;
+            pointer-events: auto;
+            cursor: pointer;
+            opacity: 0;
+            
+            backface-visibility: hidden; 
+            
+            transition: border-radius 0.6s cubic-bezier(0.25, 1, 0.5, 1), 
+                        border-color 0.4s ease, 
+                        box-shadow 0.4s ease,
+                        background 0.6s ease;
+        }
+
+        .card.collapsed {
+            border-radius: 50% !important;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+        }
+
+        .card-inner {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            height: 100%;
+            width: 100%;
+            transition: opacity 0.3s ease;
+            opacity: 1;
+        }
+
+        .card.collapsed .card-inner {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .card:hover:not(.collapsed) {
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            color: #888;
+        }
+
+        .repo-link {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .card-banner {
+            width: 100%;
+            height: 100px;
+            border-radius: 12px;
+            background-color: rgba(10, 10, 10, 0.9);
+            background-image: linear-gradient(45deg, rgba(255,255,255,0.08), rgba(0,0,0,0.8));
+            background-size: cover;
+            background-position: center;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .card-bottom {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-bottom h3 {
+            margin: 0 0 4px 0;
+            font-size: 0.95rem;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .card-bottom p {
+            color: #999;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card .badge {
+            background: #fff;
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            width: fit-content;
+            margin-top: 5px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .card:hover .badge {
+            background: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="container">
+        <div class="profile-box">
+            <div class="pfp-box">
+                <img src="banner.jpeg" alt="dst" onerror="this.style.display='none'; this.parentNode.innerText='pfp';">
+            </div>
+            <h1>dst</h1>
+            <span class="handle">@dstport</span>
+            <p class="quote">"Lies are what people promise you."</p>
+            <p>// Future SOC-Analyst & Network arcitech.</p>
+            <br><hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1);"><br>
+            <span style="color: #444; font-size: 0.75em; font-weight: bold;">SYSTEM: ACTIVE // READY</span>
+        </div>
+
+        <div id="card-overlay"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const canvas = document.getElementById('bg-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const geometry = new THREE.SphereGeometry(3.8, 30, 30);
+        const material = new THREE.MeshBasicMaterial({ 
+            color: 0xffffff,       
+            wireframe: true,       
+            transparent: true,
+            opacity: 0.05           
+        });
+        const sphere = new THREE.Mesh(geometry, material);
+        sphere.position.x = 3.2; 
+        scene.add(sphere);
+        
+        camera.position.z = 9;
+
+        const orbitRadius = 4.2;
+        let cardsData = [];
+
+        const fallbackMD = `
+https://medium.com/@dstport/covert-channels:Analysis of covert data transmission channels, detecting DNS tunneling, and uncovering hidden corporate traffic anomalies.:Hiding Malware in Corp Networks
+https://github.com/dstport/malware-analysis:Deep dive into custom stagers, unpacking techniques, and advanced windows persistence mechanisms exploited by threat actors.:Malware Analysis & RE
+https://github.com/dstport/bt-ctf:Incident response workflows, memory forensics analysis using Volatility, event log parsing, and tracking malicious entry points.:Blue Team CTF Challenge
+        `.trim();
+
+        async function initPortfolio() {
+            let rawData = "";
+
+            if (window.location.protocol === 'file:') {
+                console.warn("Запуск через file:// — активирован встроенный кэш данных.");
+                rawData = fallbackMD;
+            } else {
+                try {
+                    const response = await fetch('cards.md');
+                    if (response.ok) {
+                        rawData = await response.text();
+                    } else {
+                        rawData = fallbackMD;
+                    }
+                } catch (e) {
+                    rawData = fallbackMD;
+                }
+            }
+
+            buildCards(rawData);
+            animate();
+        }
+
+        function buildCards(textData) {
+            const lines = textData.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+            const overlay = document.getElementById('card-overlay');
+            const totalCards = lines.length;
+
+            lines.forEach((line, index) => {
+                const parts = line.split(':');
+                if (parts.length < 3) return;
+
+                const link = parts[0] + ':' + parts[1];
+                const cardText = parts[2];
+                const title = parts.slice(3).join(':') || parts[2];
+
+                let platformLabel = "link ↗";
+                let buttonLabel = "Read Post";
+                let typeLabel = "ITEM";
+                
+                if (link.toLowerCase().includes("medium.com")) {
+                    platformLabel = "medium ↗";
+                    buttonLabel = "Read Writeup";
+                    typeLabel = "WRITEUP";
+                } else if (link.toLowerCase().includes("github.com")) {
+                    platformLabel = "github ↗";
+                    buttonLabel = "View Code";
+                    typeLabel = "PROJECT";
+                }
+
+                // Распределение баннеров для демонстрации
+                let bannerStyle = '';
+                if (index === 0) {
+                    bannerStyle = `style="background-image: url('banner.jpeg'); background-size: cover;"`;
+                } else if (index === 2) {
+                    bannerStyle = `style="background-image: url('1.jpg'); background-size: cover;"`;
+                } else if (link.toLowerCase().includes("github.com")) {
+                    const repoPath = link.replace('https://github.com/', '').split('?')[0];
+                    bannerStyle = `style="background-image: url('https://opengraph.githubassets.com/1/${repoPath}'); background-size: cover;"`;
+                }
+
+                const cardId = `dynamic-card-${index}`;
+                const formattedNumber = (index + 1).toString().padStart(2, '0');
+
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card';
+                cardElement.id = cardId;
+                
+                cardElement.addEventListener('click', () => {
+                    window.open(link, '_blank');
+                });
+
+                cardElement.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-top">
+                            <span>${typeLabel} // ${formattedNumber}</span>
+                            <span class="repo-link">${platformLabel}</span>
+                        </div>
+                        <div class="card-banner" ${bannerStyle}></div>
+                        <div class="card-bottom">
+                            <div>
+                                <h3>${title}</h3>
+                                <p>${cardText}</p>
+                            </div>
+                            <div class="badge">${buttonLabel}</div>
+                        </div>
+                    </div>
+                `;
+                overlay.appendChild(cardElement);
+
+                const angle = (index * (2 * Math.PI)) / totalCards;
+                
+                let height = 0;
+                if (index % 3 === 0) height = 0.8;
+                if (index % 3 === 1) height = -0.8;
+
+                const dummy = new THREE.Object3D();
+                dummy.position.x = Math.cos(angle) * orbitRadius;
+                dummy.position.z = Math.sin(angle) * orbitRadius;
+                dummy.position.y = height;
+                sphere.add(dummy);
+
+                const cardObj = {
+                    element: cardElement,
+                    dummy: dummy,
+                    currentScale: 1,
+                    currentOpacity: 0,
+                    isHovered: false
+                };
+
+                cardElement.addEventListener('mouseenter', () => cardObj.isHovered = true);
+                cardElement.addEventListener('mouseleave', () => cardObj.isHovered = false);
+
+                cardsData.push(cardObj);
+            });
+        }
+
+        initPortfolio();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            sphere.rotation.y += 0.002;
+            sphere.rotation.x = 0.04; 
+
+            cardsData.forEach(card => {
+                const wp = new THREE.Vector3();
+                card.dummy.getWorldPosition(wp); 
+                
+                const worldZ = wp.z; 
+                
+                const relativeX = wp.x - (sphere.position.x);
+                const angleRad = Math.atan2(wp.z, relativeX);
+                const rotateYDeg = -angleRad * (180 / Math.PI) + 90;
+
+                wp.project(camera);
+                
+                let x = (wp.x * 0.5 + 0.5) * window.innerWidth;
+                let y = (-wp.y * 0.5 + 0.5) * window.innerHeight;
+                
+                let targetScale, targetOpacity;
+
+                if (worldZ < -0.3) {
+                    card.element.classList.add('collapsed');
+                    targetScale = 0.12; 
+                    targetOpacity = 0.2; 
+                } else {
+                    card.element.classList.remove('collapsed');
+                    targetScale = THREE.MathUtils.mapLinear(worldZ, -0.3, orbitRadius, 0.55, 0.75);
+                    targetOpacity = THREE.MathUtils.mapLinear(worldZ, -0.3, orbitRadius, 0.5, 0.95);
+                }
+                
+                if (card.isHovered && worldZ >= -0.3) {
+                    targetScale *= 1.2; 
+                    targetOpacity = 1.0;
+                    card.element.style.zIndex = 500;
+                } else {
+                    card.element.style.zIndex = Math.floor(THREE.MathUtils.mapLinear(worldZ, -orbitRadius, orbitRadius, 10, 200));
+                }
+
+                if (worldZ < -0.3) {
+                    card.element.style.pointerEvents = 'none';
+                } else {
+                    card.element.style.pointerEvents = 'auto';
+                }
+
+                card.currentScale += (targetScale - card.currentScale) * 0.1;
+                card.currentOpacity += (targetOpacity - card.currentOpacity) * 0.1;
+
+                let transformX = x - 120;
+                let transformY = y - 170;
+
+                const cardHeightOnScreen = 340 * card.currentScale;
+                const cardWidthOnScreen = 240 * card.currentScale;
+                const padding = 40; 
+
+                if (transformY + cardHeightOnScreen > window.innerHeight - padding) {
+                    transformY = window.innerHeight - cardHeightOnScreen - padding;
+                }
+                if (transformY < padding) {
+                    transformY = padding;
+                }
+                if (transformX + cardWidthOnScreen > window.innerWidth - padding) {
+                    transformX = window.innerWidth - cardWidthOnScreen - padding;
+                }
+
+                // Смягченный наклон (умножение на 0.4 вместо 0.65), чтобы карточки по бокам смотрелись органично
+                const currentRotateY = card.isHovered ? 0 : rotateYDeg * 0.4; 
+
+                card.element.style.transform = `translate3d(${transformX}px, ${transformY}px, 0px) scale(${card.currentScale}) rotateY(${currentRotateY}deg)`;
+                card.element.style.opacity = card.currentOpacity;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
