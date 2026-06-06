@@ -33,13 +33,13 @@
             position: relative;
         }
 
-        /* Profile Panel */
+        /* --- PROFILE PANEL (Увеличена) --- */
         .profile-box {
-            width: 280px;
+            width: 340px; /* Было 280px */
             background: rgba(10, 10, 10, 0.75);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
+            border-radius: 24px; /* Чуть увеличили скругление */
+            padding: 35px; /* Было 30px */
             height: fit-content;
             backdrop-filter: blur(15px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
@@ -47,11 +47,11 @@
         }
         
         .pfp-box {
-            width: 100px;
-            height: 100px;
+            width: 130px; /* Было 100px */
+            height: 130px; /* Было 100px */
             border-radius: 50%;
             border: 2px solid rgba(255, 255, 255, 0.2);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             overflow: hidden;
             background: #111;
         }
@@ -62,10 +62,11 @@
             object-fit: cover;
         }
 
-        .profile-box h1 { color: #fff; margin: 0 0 5px 0; font-size: 1.8rem; }
-        .profile-box .handle { color: #888; margin-bottom: 20px; display: block; font-size: 0.85rem; }
-        .profile-box .quote { color: #aaa; font-style: italic; font-size: 0.9rem; }
-        .profile-box p { font-size: 0.9rem; color: #ccc; }
+        /* Увеличены шрифты в профиле */
+        .profile-box h1 { color: #fff; margin: 0 0 8px 0; font-size: 2.2rem; } /* Было 1.8rem */
+        .profile-box .handle { color: #888; margin-bottom: 24px; display: block; font-size: 1rem; } /* Было 0.85rem */
+        .profile-box .quote { color: #aaa; font-style: italic; font-size: 1.05rem; line-height: 1.4; } /* Было 0.9rem */
+        .profile-box p { font-size: 1.05rem; color: #ccc; line-height: 1.4; } /* Было 0.9rem */
 
         #card-overlay {
             position: absolute;
@@ -83,9 +84,9 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 240px;
-            height: 340px;
-            border-radius: 20px;
+            width: 290px; 
+            height: 410px; 
+            border-radius: 24px;
             
             background: linear-gradient(135deg, 
                 rgba(255, 255, 255, 0.12) 0%, 
@@ -96,7 +97,7 @@
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: #fff; 
-            padding: 20px;
+            padding: 24px;
             box-sizing: border-box;
             box-shadow: 0 15px 35px rgba(0,0,0,0.7);
             
@@ -123,7 +124,7 @@
         .card-inner {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
             height: 100%;
             width: 100%;
             transition: opacity 0.3s ease;
@@ -144,7 +145,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.7rem;
+            font-size: 0.8rem; 
             color: #888;
         }
 
@@ -156,8 +157,8 @@
 
         .card-banner {
             width: 100%;
-            height: 100px;
-            border-radius: 12px;
+            height: 130px; 
+            border-radius: 14px;
             background-color: rgba(10, 10, 10, 0.9);
             background-size: cover;
             background-position: center;
@@ -172,15 +173,15 @@
         }
 
         .card-bottom h3 {
-            margin: 0 0 4px 0;
-            font-size: 0.95rem;
+            margin: 0 0 6px 0;
+            font-size: 1.1rem; 
             font-weight: 700;
             line-height: 1.3;
         }
 
         .card-bottom p {
             color: #999;
-            font-size: 0.75rem;
+            font-size: 0.85rem; 
             line-height: 1.4;
             margin: 0;
             display: -webkit-box;
@@ -192,12 +193,12 @@
         .card .badge {
             background: #fff;
             color: #000;
-            padding: 5px 10px;
+            padding: 6px 12px;
             border-radius: 8px;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: bold;
             width: fit-content;
-            margin-top: 5px;
+            margin-top: 8px;
             transition: background 0.3s, color 0.3s;
         }
 
@@ -220,7 +221,7 @@
             <p class="quote">"Lies are what people promise you."</p>
             <p>// Future SOC-Analyst & Network arcitech.</p>
             <br><hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1);"><br>
-            <span style="color: #444; font-size: 0.75em; font-weight: bold;">SYSTEM: ACTIVE // READY</span>
+            <span style="color: #444; font-size: 0.85em; font-weight: bold;">SYSTEM: ACTIVE // READY</span>
         </div>
 
         <div id="card-overlay"></div>
@@ -236,7 +237,7 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        const geometry = new THREE.SphereGeometry(3.8, 30, 30);
+        const geometry = new THREE.SphereGeometry(5.2, 30, 30);
         const material = new THREE.MeshBasicMaterial({ 
             color: 0xffffff,       
             wireframe: true,       
@@ -244,12 +245,14 @@
             opacity: 0.05           
         });
         const sphere = new THREE.Mesh(geometry, material);
-        sphere.position.x = 3.2; 
+        
+        // Позиция сферы по X скорректирована до 2.3, чтобы учесть увеличившуюся ширину профиля
+        sphere.position.x = 2.3; 
         scene.add(sphere);
         
         camera.position.z = 9;
 
-        const orbitRadius = 4.2;
+        const orbitRadius = 5.8;
         let cardsData = [];
 
         const fallbackMD = `
@@ -308,8 +311,6 @@ https://github.com/dstport/bt-ctf:Incident response workflows, memory forensics 
                     typeLabel = "PROJECT";
                 }
 
-                // Изменено: Убраны все старые проверки на opengraph и 1.jpg.
-                // Теперь абсолютно для всех карточек ставится banner.jpeg
                 let bannerStyle = `style="background-image: url('banner.jpeg'); background-size: cover;"`;
 
                 const cardId = `dynamic-card-${index}`;
@@ -344,8 +345,8 @@ https://github.com/dstport/bt-ctf:Incident response workflows, memory forensics 
                 const angle = (index * (2 * Math.PI)) / totalCards;
                 
                 let height = 0;
-                if (index % 3 === 0) height = 0.8;
-                if (index % 3 === 1) height = -0.8;
+                if (index % 3 === 0) height = 1.0; 
+                if (index % 3 === 1) height = -1.0;
 
                 const dummy = new THREE.Object3D();
                 dummy.position.x = Math.cos(angle) * orbitRadius;
@@ -399,12 +400,12 @@ https://github.com/dstport/bt-ctf:Incident response workflows, memory forensics 
                     targetOpacity = 0.2; 
                 } else {
                     card.element.classList.remove('collapsed');
-                    targetScale = THREE.MathUtils.mapLinear(worldZ, -0.3, orbitRadius, 0.55, 0.75);
+                    targetScale = THREE.MathUtils.mapLinear(worldZ, -0.3, orbitRadius, 0.65, 0.9);
                     targetOpacity = THREE.MathUtils.mapLinear(worldZ, -0.3, orbitRadius, 0.5, 0.95);
                 }
                 
                 if (card.isHovered && worldZ >= -0.3) {
-                    targetScale *= 1.2; 
+                    targetScale *= 1.15; 
                     targetOpacity = 1.0;
                     card.element.style.zIndex = 500;
                 } else {
@@ -420,11 +421,11 @@ https://github.com/dstport/bt-ctf:Incident response workflows, memory forensics 
                 card.currentScale += (targetScale - card.currentScale) * 0.1;
                 card.currentOpacity += (targetOpacity - card.currentOpacity) * 0.1;
 
-                let transformX = x - 120;
-                let transformY = y - 170;
+                let transformX = x - 145;
+                let transformY = y - 205;
 
-                const cardHeightOnScreen = 340 * card.currentScale;
-                const cardWidthOnScreen = 240 * card.currentScale;
+                const cardHeightOnScreen = 410 * card.currentScale;
+                const cardWidthOnScreen = 290 * card.currentScale;
                 const padding = 40; 
 
                 if (transformY + cardHeightOnScreen > window.innerHeight - padding) {
