@@ -2,3 +2,4 @@ https://dstport.medium.com/amadey-lab-cyberdefenders-c8cea2150ef2:Amadey bot mal
 https://github.com/root-froxward/security-stack:Overview of security tools, stack configurations, and defensive architecture setups for environment monitoring.:Security Stack Setup
 https://github.com/dst-port/wazuh-rules:Custom detection rules, decoders, and security monitoring configurations for Wazuh SIEM.:Wazuh Rules Setup
 https://dstport.medium.com/rotajakiro-lab-dd97a42a17ff:RotaJakiro Linux malware analysis lab walkthrough on CyberDefenders. Static analysis, reverse engineering with Ghidra, and tracking persistence mechanisms.:RotaJakiro Lab CyberDefenders
+https://dst-port.hashnode.dev/tomcat-takeover-lab-writeup-on-cyberdefenders:Tomcat web server compromise lab walkthrough on CyberDefenders. Network forensics, PCAP analysis with Wireshark, tracking brute-force attempts, and identifying reverse shell uploads.:Tomcat Takeover CyberDefenders
